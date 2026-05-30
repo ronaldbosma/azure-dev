@@ -27,5 +27,7 @@ func NewRootCommand() *cobra.Command {
 	rootCmd.AddCommand(azdext.NewMetadataCommand("1.0", extensionID, NewRootCommand))
 	rootCmd.AddCommand(azdext.NewVersionCommand(extensionID, version.Version, &extCtx.OutputFormat))
 
+	azdext.SetupLogging(azdext.LoggerOptions{Debug: true})
+
 	return rootCmd
 }

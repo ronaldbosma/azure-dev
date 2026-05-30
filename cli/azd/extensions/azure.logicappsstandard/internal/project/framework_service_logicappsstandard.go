@@ -6,11 +6,14 @@ package project
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/azure/azure-dev/cli/azd/pkg/azdext"
+	"github.com/azure/azure-dev/cli/azd/pkg/output"
+	"github.com/fatih/color"
 )
 
 // Ensure LogicAppsStandardFrameworkServiceProvider implements FrameworkServiceProvider interface
@@ -148,6 +151,26 @@ func (p *LogicAppsStandardFrameworkServiceProvider) Package(
 	if err != nil {
 		return nil, fmt.Errorf("resolving package path: %w", err)
 	}
+
+	// Warn if the package directory is empty
+	if entries, err := os.ReadDir(packagePath); err == nil && len(entries) == 0 {
+		fmt.Printf("  %s package directory '%s' is empty\n", color.YellowString("warning:"), packagePath)
+	}
+
+	fmt.Printf("   warning: fmt.printf")
+	fmt.Printf("  %s Test Warning fmt.printf\n", color.YellowString("warning:"))
+
+	fmt.Println(output.WithWarningFormat("Test warning WithWarningFormat"))
+
+	log.Printf("warning: log.printf")
+
+	logger := azdext.NewLogger("azure.logicappsstandard")
+	logger.Debug("Debug")
+	logger.Info("Info")
+	logger.Warn("Warn")
+	logger.Error("Error")
+
+	// return nil, fmt.Errorf("test that latest version of extension is used during test")
 
 	// Return a DIRECTORY artifact pointing to the resolved package directory for the service.
 	// azd's packaging pipeline will handle creating the zip archive from this directory.
